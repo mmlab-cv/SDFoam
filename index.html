@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="SDFoam🫧: Signed-Distance Foam for explicit surface reconstruction">
+  <meta name="keywords" content="Computer Graphics, Novel View Synthesis, 3D mesh reconstruction, Neural Radiance Fields">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SDFoam 🫧</title>
+
+  
+
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  }
+};
+</script>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=GTM-PMXG52KP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'GTM-PMXG52KP');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="http://mmlabsites.disi.unitn.it/">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://github.com/mmlab-cv/">
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav>
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">SDFoam🫧: Signed-Distance Foam for explicit surface reconstruction</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://orcid.org/0009-0001-1098-7430">Antonella Rech</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?user=mR1GK28AAAAJ&hl=en">Nicola Conci</a><sup>1,2</sup>,</span>
+            <span class="author-block">
+              <a href="https://scholar.google.it/citations?user=r8BzAfcAAAAJ&hl=en">Nicola Garau</a><sup>1,2</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>University of Trento,</span>
+            <span class="author-block"><sup>2</sup>CNIT</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="static/assets/SDFoam_paper.pdf"
+                   class="external-link button is-normal is-rounded is-dark" target="_blank">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/mmlab-cv/Infinity"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <img src="./static/images/SDFoam_teaser.svg"
+            alt="Teaser image."/>
+      <h2 class="subtitle has-text-centered">
+        Existing methods in literature reconstruct 3D scenes either by employing explicit or implicit geometry, each with their own advantages and drawbacks. Our method, <i>SDFoam</i>, jointly learns a signed distance field (<i>SDF</i>) and a 3D Voronoi Diagram (or <i>foam</i>), both of which are optimized during a ray-tracing process. Our method offers a good trade-off of rendering speed, visual fidelity and reconstruction accuracy.
+      </p>  
+      </h2>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p><i>
+            Neural radiance fields (NeRF) have driven impressive progress in view synthesis by using ray-traced volumetric rendering. Splatting-based methods such as 3D Gaussian Splatting (3DGS) provide faster rendering by rasterizing 3D primitives. RadiantFoam (RF) brought ray tracing back, achieving throughput comparable to Gaussian Splatting by organizing radiance with an explicit Voronoi Diagram (VD). Yet, all the mentioned methods still struggle with precise mesh reconstruction. We address this gap by jointly learning an explicit VD with an implicit Signed Distance Field (SDF). The scene is optimized via ray tracing and regularized by an Eikonal objective. The SDF introduces metric-consistent isosurfaces, which, in turn, bias near-surface Voronoi cell faces to align with the zero level set. The resulting model produces crisper, view-consistent surfaces with fewer floaters and improved topology, while preserving photometric quality and maintaining training speed on par with RadiantFoam. Across diverse scenes, our hybrid implicit-explicit formulation, which we name <strong>SDFoam</strong>, substantially improves mesh reconstruction accuracy (Chamfer distance) with comparable appearance (PSNR, SSIM), without sacrificing efficiency.
+          </i></p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+<script id="MathJax-script" async
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+
+<!-- Ray traversal -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Ray traversal</h2>
+        <div class="content has-text-justified">
+          <p>
+            Ray traversal through Voronoi cells. The ray intersects the
+            $n$-th cell (centered at site $p_n$) at positions
+            $t_n$ (entry) and $t_{n+1}$ (exit), defining the segment length
+            $\delta_n$. Spatial and visual information are piecewise constant within
+            $\delta_n$. The ray $r$ is defined by its origin $o$ and
+            direction $d$.
+          </p>
+
+          <img src="./static/images/SDFoam_ray.svg"
+               alt="Ray traversal."/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Architecture -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Architecture</h2>
+        <div class="content has-text-justified">
+          <p>
+            <strong>SDFoam Architecture.</strong>
+            A point cloud is initialized and refined over time by learning an SDF from its points.
+            Their SDF values are then converted to density, which—together with color and position 
+            parameters—are used to learn a ray-traced scene.
+            The parameter \( \theta_{\text{var}} \) is a learnable variance term that allows 
+            the SDF-to-density conversion to improve over time.
+          </p>
+          <img src="./static/images/SDFoam_architecture.svg"
+               alt="Architecture."/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Mesh extraction -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Mesh extraction</h2>
+        <div class="content has-text-justified">
+          <p>
+            From a trained SDFoam scene, we have access to both the SDF and the Voronoi Diagram. We infer the SDF value for each cell site, extracting the surface voronois via a threshold. The relevant surface faces are selected by thresholding their vertices against a close to zero SDF value. Since the VD is non-overlapping by nature, we don't need to build additional connectivity at this step.
+          </p>
+          <img src="./static/images/SDFoam_mesh_recons.svg"
+               alt="Mesh extraction."/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Quantitative Results -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Quantitative Results</h2>
+        <div class="content has-text-justified">
+          <img src="./static/images/Quant1.png"
+               alt="Quantitative Results."/>
+          <p>
+            <strong>Quantitative evaluation on the DTU dataset.</strong>
+            <strong>*RF</strong> &rarr; large Chamfer distances are due to floaters being 
+            difficult to filter using naive density-based thresholding. 
+            Our method offers a good trade-off between mesh reconstruction and visual fidelity.
+          </p>
+          <img src="./static/images/Quant2.png"
+               alt="Quantitative Results."/>
+          <p>
+            Quantitative comparisons with NeRF, NeuS and RF on the task of novel view synthesis without mask supervision.
+          </p>
+          <img src="./static/images/Quant3.png"
+               alt="Quantitative Results."/>
+          <p>
+            Quantitative comparisons with RadiantFoam on the task of novel view synthesis with mask supervision. Our joint Voronoi-SDF formulation acts as an additional regularization to boost visual appearance, removing occasional floaters in the scene.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Qualitative Results -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Qualitative Results</h2>
+        <div class="content has-text-justified">
+          <img src="./static/images/SDFoam_qual.svg"
+               alt="Qualitative Results."/>
+          <p>
+            Mesh reconstruction qualitative results. Top to bottom: ground truth, RF, SDFoam. Modelling the voronoi cells as local SDFs improves the consistency of the extracted surface, thus filling the typical <i>holes</i> derived from the ray-tracing procedure in RF.
+          </p>
+          <img src="./static/images/SDFoam_qual2.svg"
+               alt="Qualitative Results."/>
+          <p>
+            Novel view synthesis qualitative results. Top to bottom: ground truth, Radiant Foam, SDFoam. Our method is able to better model reflections, as can be seen in the metallic examples, has less floaters, while retaining a very good visual fidelity in highly textured surfaces (fur, stone, scratches, etc.).
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Synthetic benchmark -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Synthetic benchmark</h2>
+        <div class="content has-text-justified">
+          <p>
+            Synthetic scene made with Blender. The cameras placed on the two parallel circumferences (in black) are used as the training set, while the others (in orange) form the test set.
+          </p>
+          <img src="./static/images/SDFoam_blender.png"
+               alt="Synthetic benchmark."/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- SDFoam GUI -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">SDFoam GUI</h2>
+        <div class="content has-text-justified">
+          <p>
+            <strong>SDFoam GUI.</strong> The voronoi seeds can be filtered using a combination of a SDF threshold and an alpha threshold, and the geometry can be computed by obtaining the corresponding Voronoi vertices and faces from the Voronoi diagram.
+          </p>
+          <img src="./static/images/SDFoam_GUI_skull.png"
+               alt="SDFoam GUI."/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Extracting the mesh -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Extracting the mesh</h2>
+
+        <div class="content has-text-justified">
+
+          <p">
+            Left: filtering the Voronoi sites through alpha + SDF thresholding. Right: the output extracted textured mesh.
+          </p>
+
+          <div class="columns is-mobile is-centered">
+            <div class="column is-half">
+              <img src="./static/images/SDFoam_GUI.png" alt="SDFoam GUI point cloud"/>
+            </div>
+            <div class="column is-half">
+              <img src="./static/images/SDFoam_GUI_mesh.png" alt="SDFoam GUI mesh"/>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Floaters and outliers -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Floaters and outliers</h2>
+        <div class="content has-text-justified">
+          <p>
+            Left: RF, Right: SDFoam. Our method successfully gets rid of floaters by leveraging the per-cell SDF values and converting them to density.
+          </p>
+
+          <!-- Two images side-by-side -->
+          <div class="columns is-mobile is-centered">
+            <div class="column is-half">
+              <img src="./static/images/RadFoam_cube1A.png" alt="RadFoam cube"/>
+            </div>
+            <div class="column is-half">
+              <img src="./static/images/SDFoam_cube1A.png" alt="SDFoam cube"/>
+            </div>
+          </div>
+
+          <p>
+            Left: RF, Right: SDFoam. On RF we can filter out cells based on their alpha value. However, sometimes thresholding is not enough and floating or unwanted sites remain. On SDFoam, we can filter sites both by their alpha value and SDF value, precisely removing any unwanted site. The processed SDFoam scene can be left as is, or converted into a colored point cloud or mesh.
+          </p>
+          <div class="columns is-mobile is-centered">
+            <div class="column is-half">
+              <img src="./static/images/RadFoam_GUI_house.png" alt="RadFoam GUI point cloud"/>
+            </div>
+            <div class="column is-half">
+              <img src="./static/images/SDFoam_GUI_house.png" alt="SDFoam GUI point cloud"/>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Surface flatness -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Surface flatness</h2>
+        <div class="content has-text-justified">
+          <p>
+            Qualitative comparison of geometry and viewpoint rendering. From top to bottom: RadiantFoam RGB rendering, RadiantFoam depth, SDFoam RGB rendering, SDFoam depth, and (last row) SDFoam per-cell SDF.
+          </p>
+          <img src="./static/images/SDFoam_qual_supp3.svg"
+               alt="Surface flatness."/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<!-- Mesh post-processing -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Mesh post-processing</h2>
+        <div class="content has-text-justified">
+          <p>
+            Loading the SDFoam extracted mesh into Blender or any other software for further processing. As seen from the wireframe orthographic views, the walls of the building remain straight, and the high poly count allows each face to retain a sigle color, which is needed for visual fidelity. A lower polygon count mesh can be obtained at this stage through remeshing and uv remapping.
+          </p>
+          <img src="./static/images/SDFoam_blender_house.png"
+               alt="Mesh post-processing."/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>Coming soon...
+</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/videos/nerfies_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <a class="icon-link" href="https://github.com/keunhong" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            We thank the authors of <a href="https://nerfies.github.io/">Nerfies</a> that kindly open sourced the template of this website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
