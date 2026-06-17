@@ -1,0 +1,23 @@
+.vscode
+/build*/
+/dist/
+/data
+/sdfoam/
+/*output*
+/wandb
+/external/CMakeFiles/
+/external/Makefile
+/external/cmake_install.cmake
+/external/*.a
+
+*.egg-info
+__pycache__
+/*nsight
+*.mp4b
+*ipynb
+*.ply
+*.Identifier
+*.deb
+# Large mesh files
+sdfoam/*.obj
+sdfoam/*.mtl

@@ -1,0 +1,45 @@
+# Model Parameters
+sh_degree: 3
+init_points: 65_536 #11_072
+final_points: 331_072
+activation_scale: 1
+device: cuda
+use_sdfoam: true #define if using SDFOAM or RADIANTFOAM 
+
+# Pipeline Parameters
+# Pipeline Parameters
+iterations: 10_000 #20_000
+densify_from: 1_000 #2_000
+densify_until: 5_000 #11_000
+densify_factor: 1.15
+white_background: false
+quantile_weight: 0 #1e-4
+viewer: false                          # Flag to use viewer
+debug: false                           # Debug flag
+
+# Optimization Parameters
+points_lr_init: 2e-4 
+points_lr_final: 5e-6
+density_lr_init: 1e-1
+density_lr_final: 1e-2
+sdf_lr_init: 5e-5
+sdf_lr_final: 5e-6
+sharpness_lr_init: 5e-3
+sharpness_lr_final: 5e-6
+attributes_lr_init: 5e-3
+attributes_lr_final: 5e-4
+sh_factor: 0.1
+freeze_points: 9_000 #18_000                  # Points are frozen after this cycle
+
+# Dataset Parameters
+dataset: "colmap"
+data_path: "data"
+scene: "scan65_masked"
+# dataset: "colmap"
+# data_path: "data/mipnerf360"
+# scene: "flowers"
+patch_based: false
+eval: false #set to false to use all the data for training, true to use only 10% for training and 90% for evaluation
+downsample: [4,2] #[1]                    # Image downsample factors
+downsample_iterations: [0,1000] #[0, 1000]
+
