@@ -53,9 +53,8 @@ The setup installs PyTorch CUDA 13.2 wheels:
 From a fresh checkout:
 
 ```powershell
-git clone --recursive https://github.com/AntonellaRech/SDFoam.git
+git clone --recursive https://github.com/mmlab-cv/SDFoam.git
 cd SDFoam
-git checkout refactory
 
 uv venv .venv
 .venv\Scripts\activate
